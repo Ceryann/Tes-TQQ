@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tes TQQ</title>
+    <!-- Mengambil font Arab yang bagus dari Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 36px;
+        }
+        .btn-acak {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: background-color 0.3s, transform 0.1s;
+            margin-bottom: 30px;
+        }
+        .btn-acak:hover {
+            background-color: #2ecc71;
+        }
+        .btn-acak:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .card-container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            border-top: 5px solid #27ae60;
+        }
+        .bismillah {
+            font-family: 'Amiri', serif;
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #ddd, transparent);
+            margin: 20px 0;
+        }
+        .ayat-text {
+            font-family: 'Amiri', serif;
+            font-size: 38px;
+            line-height: 2.2;
+            direction: rtl;
+            color: #1a1a1a;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .surah-keterangan {
+            font-size: 16px;
+            color: #7f8c8d;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        /* ==== Bagian kecil: Acak Surat Pendek (Adh-Dhuha - An-Nas) ==== */
+        .mini-container {
+            position: relative;
+            background: white;
+            border-radius: 15px;
+            padding: 25px 30px;
+            max-width: 420px;
+            margin: 35px auto 0 auto;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+            border-top: 5px solid #2980b9;
+        }
+        .btn-close-mini {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            background: none;
+            border: none;
+            font-size: 18px;
+            line-height: 1;
+            color: #b0b8bd;
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 6px;
+        }
+        .btn-close-mini:hover {
+            color: #7f8c8d;
+            background-color: #f0f4f8;
+        }
+        .btn-tampilkan-mini {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 100;
+        }
+        .btn-tampilkan-mini:hover {
+            background-color: #3498db;
+        }
+        .mini-title {
+            font-size: 20px;
+            color: #2c3e50;
+            margin: 0 0 4px 0;
+        }
+        .mini-sub {
+            font-size: 13px;
+            color: #95a5a6;
+            margin: 0 0 18px 0;
+        }
+        .btn-acak-mini {
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: background-color 0.3s, transform 0.1s;
+        }
+        .btn-acak-mini:hover {
+            background-color: #3498db;
+        }
+        .btn-acak-mini:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .surat-hasil {
+            margin-top: 18px;
+            min-height: 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .surat-placeholder {
+            font-size: 13px;
+            color: #b0b8bd;
+        }
+        .surat-arab {
+            font-family: 'Amiri', serif;
+            font-size: 30px;
+            color: #1a1a1a;
+            direction: rtl;
+        }
+        .surat-latin {
+            font-size: 15px;
+            color: #2980b9;
+            font-weight: bold;
+            margin-top: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Tes TQQ</h1>
+    
+    <button class="btn-acak" onclick="acakSoal()">Acak Ayat Berikutnya</button>
+
+    <div class="card-container">
+        <!-- Bismillah akan selalu muncul di atas -->
+        <div class="bismillah">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+        
+        <div class="divider"></div>
+        
+        <div id="ayat-tampil" class="ayat-text">
+            Silakan klik tombol "Acak Ayat Berikutnya" untuk memulai tes.
+        </div>
+        
+        <div id="surah-tampil" class="surah-keterangan">
+            <!-- Keterangan surat akan muncul di sini -->
+        </div>
+    </div>
+
+    <!-- ==== Bagian kecil: Acak Surat Pendek (Adh-Dhuha - An-Nas) ==== -->
+    <div class="mini-container" id="mini-box">
+        <button class="btn-close-mini" onclick="sembunyikanMini()" title="Sembunyikan kotak ini">&#10005;</button>
+        <div class="mini-title">Acak Surat Pendek</div>
+        <div class="mini-sub">Juz 30 &middot; Adh-Dhuha (93) &mdash; An-Nas (114)</div>
+        <button class="btn-acak-mini" onclick="acakSurat()">Acak Surat</button>
+        <div id="surat-tampil" class="surat-hasil">
+            <div class="surat-placeholder">Klik tombol untuk memilih surat secara acak.</div>
+        </div>
+    </div>
+
+    <button id="show-mini-btn" class="btn-tampilkan-mini" onclick="tampilkanMini()">&#128065; Tampilkan Acak Surat</button>
+
+    <script>
+        // Array yang menyimpan ayat dan surah
+        const bankSoal = [
+            { surah: "Q.S. As-Saff (61): 4", ayat: "إِنَّ اللَّهَ يُحِبُّ الَّذِينَ يُقَاتِلُونَ فِي سَبِيلِهِ صَفًّا كَأَنَّهُمْ بُنْيَانٌ مَرْصُوصٌ" },
+            { surah: "Q.S. Al-An'am (6): 7", ayat: "وَلَوْ نَزَّلْنَا عَلَيْكَ كِتَابًا فِي قِرْطَاسٍ فَلَمَسُوهُ بِأَيْدِيهِمْ لَقَالَ الَّذِينَ كَفَرُوا إِنْ هَٰذَا إِلَّا سِحْرٌ مُبِينٌ" },
+            { surah: "Q.S. Hud (11): 41", ayat: "وَقَالَ ارْكَبُوا فِيهَا بِسْمِ اللَّهِ مَجْرَاهَا وَمُرْسَاهَا ۚ إِنَّ رَبِّي لَغَفُورٌ رَحِيمٌ" },
+            { surah: "Q.S. Hud (11): 42", ayat: "وَهِيَ تَجْرِي بِهِمْ فِي مَوْجٍ كَالْجِبَالِ وَنَادَىٰ نُوحٌ ابْنَهُ وَكَانَ فِي مَعْزِلٍ يَا بُنَيَّ ارْكَبْ مَعَنَا وَلَا تَكُنْ مَعَ الْكَافِرِينَ" },
+            { surah: "Q.S. Yusuf (12): 11", ayat: "قَالُوا يَا أَبَانَا مَا لَكَ لَا تَأْمَنَّا عَلَىٰ يُوسُفَ وَإِنَّا لَهُ لَنَاصِحُونَ" },
+            { surah: "Q.S. Al-Hujurat (49): 11", ayat: "وَلَا تَلْمِزُوا أَنْفُسَكُمْ وَلَا تَنَابَزُوا بِالْأَلْقَابِ ۖ بِئْسَ الِاسْمُ الْفُسُوقُ بَعْدَ الْإِيمَانِ ۚ وَمَنْ لَمْ يَتُبْ فَأُولَٰئِكَ هُمُ الظَّالِمُونَ" },
+            { surah: "Q.S. Fussilat (41): 44", ayat: " أَأَعْجَمِيٌّ وَعَرَبِيٌّ ۗ قُلْ هُوَ لِلَّذِينَ آمَنُوا هُدًى وَشِفَاءٌ ۖ وَالَّذِينَ لَا يُؤْمِنُونَ فِي آذَانِهِمْ وَقْرٌ وَهُوَ عَلَيْهِمْ عَمًى ۚ أُولَٰئِكَ يُنَادَوْنَ مِنْ مَكَانٍ بَعِيدٍ" },
+            { surah: "Q.S. Al-Mutaffifin (83): 13-14", ayat: "إِذَا تُتْلَىٰ عَلَيْهِ آيَاتُنَا قَالَ أَسَاطِيرُ الْأَوَّلِينَ ۝ كَلَّا ۖ بَلْ ۜ رَانَ عَلَىٰ قُلُوبِهِمْ مَا كَانُوا يَكْسِبُونَ" },
+            { surah: "Q.S. Al-Ahqaf (46): 4", ayat: " ائْتُونِي بِكِتَابٍ مِنْ قَبْلِ هَٰذَا أَوْ أَثَارَةٍ مِنْ عِلْمٍ إِنْ كُنْتُمْ صَادِقِينَ" },
+            { surah: "Q.S. Al-Baqarah (2): 245", ayat: "مَنْ ذَا الَّذِي يُقْرِضُ اللَّهَ قَرْضًا حَسَنًا فَيُضَاعِفَهُ لَهُ أَضْعَافًا كَثِيرَةً ۚ وَاللَّهُ يَقْبِضُ وَيَبْسُطُ وَإِلَيْهِ تُرْجَعُونَ" },
+            { surah: "Q.S. Al-Ghashiyah (88): 22-23", ayat: "لَسْتَ عَلَيْهِمْ بِمُصَيْطِرٍ ۝ إِلَّا مَنْ تَوَلَّىٰ وَكَفَرَ" },
+            { surah: "Q.S. Al-Kafirun (109): 3-4", ayat: "وَلَا أَنْتُمْ عَابِدُونَ مَا أَعْبُدُ ۝ وَلَا أَنَا عَابِدٌ مَا عَبَدْتُمْ" },
+            { surah: "Q.S. Al-Mu'minun (23): 46", ayat: "إِلَىٰ فِرْعَوْنَ وَمَلَئِهِ فَاسْتَكْبَرُوا وَكَانُوا قَوْمًا عَالِينَ" },
+            { surah: "Q.S. Hud (11): 68", ayat: "كَأَنْ لَمْ يَغْنَوْا فِيهَا ۗ أَلَا إِنَّ ثَمُودَ كَفَرُوا رَبَّهُمْ ۗ أَلَا بُعْدًا لِثَمُودَ" },
+            { surah: "Q.S. Al-Insan (76): 15-16", ayat: "وَيُطَافُ عَلَيْهِمْ بِآنِيَةٍ مِنْ فِضَّةٍ وَأَكْوَابٍ كَانَتْ قَوَارِيرَا ۝ قَوَارِيرَا مِنْ فِضَّةٍ قَدَّرُوهَا تَقْدِيرًا" },
+            { surah: "Q.S. Al-Mursalat (77): 20", ayat: "أَلَمْ نَخْلُقْكُمْ مِنْ مَاءٍ مَهِينٍ" },
+            { surah: "Q.S. Al-Ma'idah (5): 28", ayat: "لَئِنْ بَسَطْتَ إِلَيَّ يَدَكَ لِتَقْتُلَنِي مَا أَنَا بِبَاسِطٍ يَدِيَ إِلَيْكَ لِأَقْتُلَكَ ۖ إِنِّي أَخَافُ اللَّهَ رَبَّ الْعَالَمِينَ" },
+            { surah: "Q.S. Al-Jumu'ah (62): 11", ayat: "وَإِذَا رَأَوْا تِجَارَةً أَوْ لَهْوًا انْفَضُّوا إِلَيْهَا وَتَرَكُوكَ قَائِمًا ۚ قُلْ مَا عِنْدَ اللَّهِ خَيْرٌ مِنَ اللَّهْوِ وَمِنَ التِّجَارَةِ ۚ وَاللَّهُ خَيْرُ الرَّازِقِينَ" },
+            { surah: "Fawatih As-Suwar (Huruf Muqatta'ah)", ayat: "المر ۝ كهيعص ۝ طسم ۝ ص ۝ عسق" },
+            { surah: "Q.S. Al-Anbiya (21): 104", ayat: "يَوْمَ نَطْوِي السَّمَاءَ كَطَيِّ السِّجِلِّ لِلْكُتُبِ ۚ كَمَا بَدَأْنَا أَوَّلَ خَلْقٍ نُعِيدُهُ ۚ وَعْدًا عَلَيْنَا ۚ إِنَّا كُنَّا فَاعِلِينَ" },
+            { surah: "Q.S. Al-Kahfi (18): 1-2", ayat: "الْحَمْدُ لِلَّهِ الَّذِي أَنْزَلَ عَلَىٰ عَبْدِهِ الْكِتَابَ وَلَمْ يَجْعَلْ لَهُ عِوَجًا ۜ ۝ قَيِّمًا لِيُنْذِرَ بَأْسًا شَدِيدًا مِنْ لَدُنْهُ وَيُبَشِّرَ الْمُؤْمِنِينَ الَّذِينَ يَعْمَلُونَ الصَّالِحَاتِ أَنَّ لَهُمْ أَجْرًا حَسَنًا" },
+            { surah: "Q.S. Yasin (36): 52", ayat: "قَالُوا يَا وَيْلَنَا مَنْ بَعَثَنَا مِنْ مَرْقَدِنَا ۜ ۗ هَٰذَا مَا وَعَدَ الرَّحْمَٰنُ وَصَدَقَ الْمُرْسَلُونَ" },
+            { surah: "Q.S. Al-Qiyamah (75): 27-28", ayat: "وَقِيلَ مَنْ ۜ رَاقٍ ۝ وَظَنَّ أَنَّهُ الْفِرَاقُ" },
+            { surah: "Q.S. Al-A'raf (7): 69", ayat: " وَاذْكُرُوا إِذْ جَعَلَكُمْ خُلَفَاءَ مِنْ بَعْدِ قَوْمِ نُوحٍ وَزَادَكُمْ فِي الْخَلْقِ بَصْۜطَةً ۖ فَاذْكُرُوا آلَاءَ اللَّهِ لَعَلَّكُمْ تُفْلِحُونَ" },
+            { surah: "Q.S. Al-Insan (76): 4", ayat: "إِنَّا أَعْتَدْنَا لِلْكَافِرِينَ سَلَاسِلَا وَأَغْلَالًا وَسَعِيرًا" },
+            { surah: "Q.S. An-Naml (27): 36", ayat: "فَلَمَّا جَاءَ سُلَيْمَانَ قَالَ أَتُمِدُّونَنِ بِمَالٍ فَمَا آتَانِيَ اللَّهُ خَيْرٌ مِمَّا آتَاكُمْ بَلْ أَنْتُمْ بِهَدِيَّتِكُمْ تَفْرَحُونَ" },
+            { surah: "Q.S. Ar-Rum (30): 54", ayat: "اللَّهُ الَّذِي خَلَقَكُمْ مِنْ ضَعْفٍ ثُمَّ جَعَلَ مِنْ بَعْدِ ضَعْفٍ قُوَّةً ثُمَّ جَعَلَ مِنْ بَعْدِ قُوَّةٍ ضَعْفًا وَشَيْبَةً ۚ يَخْلُقُ مَا يَشَاءُ ۖ وَهُوَ الْعَلِيمُ الْقَدِيرُ" },
+            { surah: "Q.S. An-Nur (24): 3", ayat: "الزَّانِي لَا يَنْكِحُ إِلَّا زَانِيَةً أَوْ مُشْرِكَةً وَالزَّانِيَةُ لَا يَنْكِحُهَا إِلَّا زَانٍ أَوْ مُشْرِكٌ ۚ وَحُرِّمَ ذَٰلِكَ عَلَى الْمُؤْمِنِينَ" }
+        ];
+
+        let indexTerakhir = -1;
+
+        function acakSoal() {
+            let indexAcak;
+            // Looping agar soal yang muncul tidak sama persis dengan soal sebelumnya
+            do {
+                indexAcak = Math.floor(Math.random() * bankSoal.length);
+            } while (indexAcak === indexTerakhir);
+            
+            indexTerakhir = indexAcak;
+            
+            // Menampilkan ayat dan surah ke dalam HTML
+            document.getElementById("ayat-tampil").innerText = bankSoal[indexAcak].ayat;
+            document.getElementById("surah-tampil").innerText = bankSoal[indexAcak].surah;
+        }
+
+        // ==== Data surat pendek: Adh-Dhuha (93) sampai An-Nas (114) ====
+        const bankSurat = [
+            { no: 93,  latin: "Adh-Dhuha",              arab: "الضحى" },
+            { no: 94,  latin: "Asy-Syarh (Al-Insyirah)", arab: "الشرح" },
+            { no: 95,  latin: "At-Tin",                 arab: "التين" },
+            { no: 96,  latin: "Al-'Alaq",                arab: "العلق" },
+            { no: 97,  latin: "Al-Qadr",                 arab: "القدر" },
+            { no: 98,  latin: "Al-Bayyinah",             arab: "البينة" },
+            { no: 99,  latin: "Az-Zalzalah",             arab: "الزلزلة" },
+            { no: 100, latin: "Al-'Adiyat",              arab: "العاديات" },
+            { no: 101, latin: "Al-Qari'ah",              arab: "القارعة" },
+            { no: 102, latin: "At-Takatsur",             arab: "التكاثر" },
+            { no: 103, latin: "Al-'Asr",                 arab: "العصر" },
+            { no: 104, latin: "Al-Humazah",              arab: "الهمزة" },
+            { no: 105, latin: "Al-Fil",                  arab: "الفيل" },
+            { no: 106, latin: "Quraisy",                 arab: "قريش" },
+            { no: 107, latin: "Al-Ma'un",                arab: "الماعون" },
+            { no: 108, latin: "Al-Kautsar",              arab: "الكوثر" },
+            { no: 109, latin: "Al-Kafirun",              arab: "الكافرون" },
+            { no: 110, latin: "An-Nasr",                 arab: "النصر" },
+            { no: 111, latin: "Al-Masad",                arab: "المسد" },
+            { no: 112, latin: "Al-Ikhlas",               arab: "الإخلاص" },
+            { no: 113, latin: "Al-Falaq",                arab: "الفلق" },
+            { no: 114, latin: "An-Nas",                  arab: "الناس" }
+        ];
+
+        let indexSuratTerakhir = -1;
+
+        function acakSurat() {
+            let idx;
+            do {
+                idx = Math.floor(Math.random() * bankSurat.length);
+            } while (idx === indexSuratTerakhir && bankSurat.length > 1);
+
+            indexSuratTerakhir = idx;
+            const s = bankSurat[idx];
+
+            document.getElementById("surat-tampil").innerHTML =
+                '<div class="surat-arab">' + s.arab + '</div>' +
+                '<div class="surat-latin">' + s.no + '. ' + s.latin + '</div>';
+        }
+
+        // ==== Sembunyikan / tampilkan kotak "Acak Surat Pendek" ====
+        function sembunyikanMini() {
+            document.getElementById("mini-box").style.display = "none";
+            document.getElementById("show-mini-btn").style.display = "inline-block";
+            try { localStorage.setItem("tqq-mini-hidden", "1"); } catch (e) {}
+        }
+
+        function tampilkanMini() {
+            document.getElementById("mini-box").style.display = "block";
+            document.getElementById("show-mini-btn").style.display = "none";
+            try { localStorage.setItem("tqq-mini-hidden", "0"); } catch (e) {}
+        }
+
+        // Memuat preferensi tersembunyi/tidak dari kunjungan sebelumnya
+        (function () {
+            try {
+                if (localStorage.getItem("tqq-mini-hidden") === "1") {
+                    document.getElementById("mini-box").style.display = "none";
+                    document.getElementById("show-mini-btn").style.display = "inline-block";
+                }
+            } catch (e) {}
+        })();
+    </script>
+
+</body>
+</html>
