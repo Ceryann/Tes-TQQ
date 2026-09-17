@@ -248,54 +248,109 @@
             { surah: "Q.S. An-Nur (24): 3", ayat: "الزَّانِي لَا يَنْكِحُ إِلَّا زَانِيَةً أَوْ مُشْرِكَةً وَالزَّانِيَةُ لَا يَنْكِحُهَا إِلَّا زَانٍ أَوْ مُشْرِكٌ ۚ وَحُرِّمَ ذَٰلِكَ عَلَى الْمُؤْمِنِينَ" }
         ];
 
-        let indexTerakhir = -1;
+        // ==== Sistem acak ayat: tidak mengulang surah sampai semua ayat sudah keluar,
+        //      dan tidak boleh surah yang sama muncul dua kali berturut-turut ====
+        function ambilKunciSurah(teksSurah) {
+            const cocok = teksSurah.match(/Q\.S\.\s*(.+?)\s*\(/);
+            return cocok ? cocok[1].trim() : teksSurah;
+        }
+
+        let dekSoal = [];
+        let suratTerakhirDitampilkan = null;
+
+        function acakDekBaru() {
+            // Buat urutan indeks 0..n-1 lalu kocok (Fisher-Yates)
+            const urutan = bankSoal.map((_, i) => i);
+            for (let i = urutan.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [urutan[i], urutan[j]] = [urutan[j], urutan[i]];
+            }
+
+            // Pastikan tidak ada dua entri dari surah yang sama bersebelahan di dalam dek
+            for (let i = 1; i < urutan.length; i++) {
+                if (ambilKunciSurah(bankSoal[urutan[i]].surah) === ambilKunciSurah(bankSoal[urutan[i - 1]].surah)) {
+                    let tukar = -1;
+                    for (let j = i + 1; j < urutan.length; j++) {
+                        if (ambilKunciSurah(bankSoal[urutan[j]].surah) !== ambilKunciSurah(bankSoal[urutan[i - 1]].surah)) {
+                            tukar = j;
+                            break;
+                        }
+                    }
+                    if (tukar !== -1) {
+                        [urutan[i], urutan[tukar]] = [urutan[tukar], urutan[i]];
+                    }
+                }
+            }
+
+            // Pastikan ayat pertama di dek baru ini bukan dari surah yang sama dengan ayat terakhir yang tampil sebelumnya
+            if (suratTerakhirDitampilkan && ambilKunciSurah(bankSoal[urutan[0]].surah) === suratTerakhirDitampilkan) {
+                for (let j = 1; j < urutan.length; j++) {
+                    if (ambilKunciSurah(bankSoal[urutan[j]].surah) !== suratTerakhirDitampilkan) {
+                        [urutan[0], urutan[j]] = [urutan[j], urutan[0]];
+                        break;
+                    }
+                }
+            }
+
+            dekSoal = urutan;
+        }
 
         function acakSoal() {
-            let indexAcak;
-            // Looping agar soal yang muncul tidak sama persis dengan soal sebelumnya
-            do {
-                indexAcak = Math.floor(Math.random() * bankSoal.length);
-            } while (indexAcak === indexTerakhir);
-            
-            indexTerakhir = indexAcak;
-            
+            // Kalau dek sudah habis (semua ayat sudah tampil), kocok ulang dek baru
+            if (dekSoal.length === 0) {
+                acakDekBaru();
+            }
+
+            const indexAcak = dekSoal.shift();
+            suratTerakhirDitampilkan = ambilKunciSurah(bankSoal[indexAcak].surah);
+
             // Menampilkan ayat dan surah ke dalam HTML
             document.getElementById("ayat-tampil").innerText = bankSoal[indexAcak].ayat;
             document.getElementById("surah-tampil").innerText = bankSoal[indexAcak].surah;
         }
 
         // ==== Data surat pendek: Adh-Dhuha (93) sampai An-Nas (114) ====
+        // bobot lebih tinggi = lebih sering muncul saat diacak
         const bankSurat = [
-            { no: 93,  latin: "Adh-Dhuha",              arab: "الضحى" },
-            { no: 94,  latin: "Asy-Syarh (Al-Insyirah)", arab: "الشرح" },
-            { no: 95,  latin: "At-Tin",                 arab: "التين" },
-            { no: 96,  latin: "Al-'Alaq",                arab: "العلق" },
-            { no: 97,  latin: "Al-Qadr",                 arab: "القدر" },
-            { no: 98,  latin: "Al-Bayyinah",             arab: "البينة" },
-            { no: 99,  latin: "Az-Zalzalah",             arab: "الزلزلة" },
-            { no: 100, latin: "Al-'Adiyat",              arab: "العاديات" },
-            { no: 101, latin: "Al-Qari'ah",              arab: "القارعة" },
-            { no: 102, latin: "At-Takatsur",             arab: "التكاثر" },
-            { no: 103, latin: "Al-'Asr",                 arab: "العصر" },
-            { no: 104, latin: "Al-Humazah",              arab: "الهمزة" },
-            { no: 105, latin: "Al-Fil",                  arab: "الفيل" },
-            { no: 106, latin: "Quraisy",                 arab: "قريش" },
-            { no: 107, latin: "Al-Ma'un",                arab: "الماعون" },
-            { no: 108, latin: "Al-Kautsar",              arab: "الكوثر" },
-            { no: 109, latin: "Al-Kafirun",              arab: "الكافرون" },
-            { no: 110, latin: "An-Nasr",                 arab: "النصر" },
-            { no: 111, latin: "Al-Masad",                arab: "المسد" },
-            { no: 112, latin: "Al-Ikhlas",               arab: "الإخلاص" },
-            { no: 113, latin: "Al-Falaq",                arab: "الفلق" },
-            { no: 114, latin: "An-Nas",                  arab: "الناس" }
+            { no: 93,  latin: "Adh-Dhuha",              arab: "الضحى",     bobot: 1 },
+            { no: 94,  latin: "Asy-Syarh (Al-Insyirah)", arab: "الشرح",     bobot: 3 },
+            { no: 95,  latin: "At-Tin",                 arab: "التين",     bobot: 3 },
+            { no: 96,  latin: "Al-'Alaq",                arab: "العلق",     bobot: 1 },
+            { no: 97,  latin: "Al-Qadr",                 arab: "القدر",     bobot: 3 },
+            { no: 98,  latin: "Al-Bayyinah",             arab: "البينة",    bobot: 1 },
+            { no: 99,  latin: "Az-Zalzalah",             arab: "الزلزلة",   bobot: 1 },
+            { no: 100, latin: "Al-'Adiyat",              arab: "العاديات",  bobot: 1 },
+            { no: 101, latin: "Al-Qari'ah",              arab: "القارعة",   bobot: 1 },
+            { no: 102, latin: "At-Takatsur",             arab: "التكاثر",   bobot: 3 },
+            { no: 103, latin: "Al-'Asr",                 arab: "العصر",     bobot: 3 },
+            { no: 104, latin: "Al-Humazah",              arab: "الهمزة",    bobot: 3 },
+            { no: 105, latin: "Al-Fil",                  arab: "الفيل",     bobot: 3 },
+            { no: 106, latin: "Quraisy",                 arab: "قريش",      bobot: 3 },
+            { no: 107, latin: "Al-Ma'un",                arab: "الماعون",   bobot: 3 },
+            { no: 108, latin: "Al-Kautsar",              arab: "الكوثر",    bobot: 3 },
+            { no: 109, latin: "Al-Kafirun",              arab: "الكافرون",  bobot: 3 },
+            { no: 110, latin: "An-Nasr",                 arab: "النصر",     bobot: 3 },
+            { no: 111, latin: "Al-Lahab",                arab: "المسد",     bobot: 3 },
+            { no: 112, latin: "Al-Ikhlas",               arab: "الإخلاص",   bobot: 3 },
+            { no: 113, latin: "Al-Falaq",                arab: "الفلق",     bobot: 3 },
+            { no: 114, latin: "An-Nas",                  arab: "الناس",     bobot: 3 }
         ];
+
+        // Membangun kumpulan indeks berdasarkan bobot: surah dengan bobot 3
+        // akan muncul 3x lebih sering di dalam "kantong" undian ini dibanding bobot 1
+        const kumpulanSurat = [];
+        bankSurat.forEach((s, i) => {
+            for (let k = 0; k < s.bobot; k++) {
+                kumpulanSurat.push(i);
+            }
+        });
 
         let indexSuratTerakhir = -1;
 
         function acakSurat() {
             let idx;
             do {
-                idx = Math.floor(Math.random() * bankSurat.length);
+                idx = kumpulanSurat[Math.floor(Math.random() * kumpulanSurat.length)];
             } while (idx === indexSuratTerakhir && bankSurat.length > 1);
 
             indexSuratTerakhir = idx;
